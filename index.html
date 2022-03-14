@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
+    <title>Name Tag</title>
+</head>
+<style>
+    @media print {
+        @page {
+            size: letter;
+            margin: 0mm;
+        }
+    }
+
+    html,
+    body,
+    div[data-role="page"] {
+        /* -webkit-font-smoothing: subpixel-antialiased; */
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .div1 {
+        width: 2.35in;
+        height: 0.75in;
+        padding-left: 0.2in;
+        padding-right: 0.2in;
+        border-top: 1px solid black;
+        border-left: 1px solid black;
+        text-align: center;
+        font-size: 3vw;
+        word-wrap: break-word;
+    }
+
+    .letter {
+        width: max-content;
+        background-color: gainsboro;
+        display: grid;
+        grid-template-columns: max-content max-content max-content;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+
+    }
+</style>
+
+<body>
+    <input type="file" id="input" accept=".xls,.xlsx" />
+    <div class="letter">
+        <div class="div1">
+            Jessica
+        </div>
+        <div class="div1">
+            Schrobilgen
+        </div>
+        <div class="div1">
+            MATHEW
+        </div>
+        <div class="div1">
+            abcdefghijklmnopqris
+        </div>
+        <div class="div1">
+            裘孟霖
+        </div>
+        <div class="div1">
+            裘恩慈
+        </div>
+        <div class="div1">
+            成倩
+        </div>
+        <div class="div1">
+            王中銘
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+        <div class="div1">
+            Wayne
+        </div>
+    </div>
+    <div class="letter">
+        <div class="div1">
+            Wayne
+        </div>
+    </div>
+</body>
+<script>
+    var input = document.getElementById("input");
+    let nameList = [];
+
+    input.addEventListener('change', async () => {
+        await readXlsxFile(input.files[0]).then((rows) => {
+            rows.map((data) => {
+                nameList.push(data[0].split(/[,.\s，、+]/));
+            });
+        }).catch(error => {
+            console.log(error)
+        });
+        console.log(nameList);
+    })
+
+</script>
+
+</html>
