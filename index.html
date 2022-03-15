@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Noto+Serif+TC:wght@200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
     <title>Name Tag</title>
 </head>
 <style>
@@ -19,12 +24,14 @@
     html,
     body,
     div[data-role="page"] {
-        /* -webkit-font-smoothing: subpixel-antialiased; */
+        -webkit-font-smoothing: subpixel-antialiased;
         margin: 0px;
         padding: 0px;
+        font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Serif SC', 'Noto Serif TC', sans-serif;
     }
 
     .div1 {
+        word-break: keep-all;
         width: 2.35in;
         height: 0.75in;
         padding-left: 0.2in;
@@ -32,8 +39,10 @@
         border-top: 1px solid black;
         border-left: 1px solid black;
         text-align: center;
-        font-size: 3vw;
         word-wrap: break-word;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .letter {
@@ -50,162 +59,62 @@
 <body>
     <input type="file" id="input" accept=".xls,.xlsx" />
     <div class="letter">
-        <div class="div1">
-            Jessica
-        </div>
-        <div class="div1">
-            Schrobilgen
-        </div>
-        <div class="div1">
-            MATHEW
-        </div>
-        <div class="div1">
-            abcdefghijklmnopqris
-        </div>
-        <div class="div1">
-            裘孟霖
-        </div>
-        <div class="div1">
-            裘恩慈
-        </div>
-        <div class="div1">
-            成倩
-        </div>
-        <div class="div1">
-            王中銘
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-        <div class="div1">
-            Wayne
-        </div>
-    </div>
-    <div class="letter">
-        <div class="div1">
-            Wayne
-        </div>
     </div>
 </body>
 <script>
-    var input = document.getElementById("input");
+    const input = document.getElementById("input");
     let nameList = [];
+    const letter = document.querySelector('.letter');
 
     input.addEventListener('change', async () => {
         await readXlsxFile(input.files[0]).then((rows) => {
             rows.map((data) => {
-                nameList.push(data[0].split(/[,.\s，、+]/));
+                nameList.push(data[0].split(/[\s,，、+]/));
             });
         }).catch(error => {
             console.log(error)
         });
-        console.log(nameList);
+        addColum(nameList);
     })
+
+    function addColum(nameList) {
+        let listLength = nameList.length;
+        let tableNumber = Math.floor(listLength / 42) + 1;
+        let listIndex = 0;
+        for (let tableIndex = 0; tableIndex < tableNumber; tableIndex++) {
+            for (let i = 0; i < 42; i++) {
+                var iDiv = document.createElement('div');
+                iDiv.className = 'div1';
+                if (nameList[listIndex] !== undefined) {
+                    var name = document.createElement('span');
+                    name.className = 'name';
+                    nameList[listIndex].forEach(element => {
+                        name.innerText += element + ' ';
+                    });
+                    switch (true) {
+                        case name.innerText.length < 20:
+                            name.style.fontSize = '28px';
+                            break;
+                        case name.innerText.length < 35:
+                            name.style.fontSize = '24px';
+                            break;
+                        case name.innerText.length < 55:
+                            name.style.fontSize = '20px';
+                            break;
+                        case name.innerText.length < 70:
+                            name.style.fontSize = '17px';
+                            break;
+                        default:
+                            break;
+                    }
+                    name.style.lineHeight = 1;
+                    iDiv.append(name);
+                }
+                listIndex++;
+                letter.appendChild(iDiv);
+            }
+        }
+    }
 
 </script>
 
