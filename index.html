@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100;300;400;500;700;900&family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Noto+Serif+TC:wght@200;300;400;500;600;700;900&display=swap"
         rel="stylesheet">
-    <title>Name Tag</title>
+    <title>Name Tag Generator</title>
 </head>
 <style>
     @media print {
@@ -19,54 +19,61 @@
             size: letter;
             margin: 0mm;
         }
+        #input {
+            display: none;
+        }
     }
 
     html,
     body,
     div[data-role="page"] {
+        width: 100%;
         -webkit-font-smoothing: subpixel-antialiased;
         margin: 0px;
         padding: 0px;
         font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Serif SC', 'Noto Serif TC', sans-serif;
     }
 
-    .div1 {
-        word-break: keep-all;
+    .letter {
+        width: max-content;
+        margin: auto;
+        background-color: gainsboro;
+        display: grid;
+        grid-template-columns: max-content max-content max-content;
+        border-bottom: 1px dotted rgb(190, 190, 190);;
+        border-right: 1px dotted rgb(190, 190, 190);
+    }
+    .name-tag {
         width: 2.35in;
         height: 0.75in;
         padding-left: 0.2in;
         padding-right: 0.2in;
-        border-top: 1px solid black;
-        border-left: 1px solid black;
+        border-top: 1px dotted rgb(190, 190, 190);
+        border-left: 1px dotted rgb(190, 190, 190);
         text-align: center;
         word-wrap: break-word;
+        word-break: keep-all;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    .letter {
-        width: max-content;
-        background-color: gainsboro;
-        display: grid;
-        grid-template-columns: max-content max-content max-content;
-        border-bottom: 1px solid black;
-        border-right: 1px solid black;
-
-    }
 </style>
 
 <body>
-    <input type="file" id="input" accept=".xls,.xlsx" />
+    <input type="file" class="input" accept=".xls,.xlsx" />
     <div class="letter">
     </div>
 </body>
 <script>
-    const input = document.getElementById("input");
-    let nameList = [];
+    const input = document.querySelector('.input');
     const letter = document.querySelector('.letter');
+    let nameList = [];
 
     input.addEventListener('change', async () => {
+        letter.innerHTML = "";
+        nameList = [];
+        if (!input.files[0]) return;
         await readXlsxFile(input.files[0]).then((rows) => {
             rows.map((data) => {
                 nameList.push(data[0].split(/[\s,，、+]/));
@@ -79,39 +86,40 @@
 
     function addColum(nameList) {
         let listLength = nameList.length;
+        if (!listLength) return;
         let tableNumber = Math.floor(listLength / 42) + 1;
         let listIndex = 0;
         for (let tableIndex = 0; tableIndex < tableNumber; tableIndex++) {
             for (let i = 0; i < 42; i++) {
-                var iDiv = document.createElement('div');
-                iDiv.className = 'div1';
+                let nameTag = document.createElement('div');
+                nameTag.className = 'name-tag';
                 if (nameList[listIndex] !== undefined) {
-                    var name = document.createElement('span');
-                    name.className = 'name';
+                    let nameSpan = document.createElement('span');
+                    nameSpan.className = 'name';
                     nameList[listIndex].forEach(element => {
-                        name.innerText += element + ' ';
+                        nameSpan.innerText += element + ' ';
                     });
                     switch (true) {
-                        case name.innerText.length < 20:
-                            name.style.fontSize = '28px';
+                        case nameSpan.innerText.length < 20:
+                            nameSpan.style.fontSize = '28px';
                             break;
-                        case name.innerText.length < 35:
-                            name.style.fontSize = '24px';
+                        case nameSpan.innerText.length < 35:
+                            nameSpan.style.fontSize = '24px';
                             break;
-                        case name.innerText.length < 55:
-                            name.style.fontSize = '20px';
+                        case nameSpan.innerText.length < 55:
+                            nameSpan.style.fontSize = '20px';
                             break;
-                        case name.innerText.length < 70:
-                            name.style.fontSize = '17px';
+                        case nameSpan.innerText.length < 70:
+                            nameSpan.style.fontSize = '17px';
                             break;
                         default:
                             break;
                     }
-                    name.style.lineHeight = 1;
-                    iDiv.append(name);
+                    nameSpan.style.lineHeight = 1;
+                    nameTag.append(nameSpan);
                 }
                 listIndex++;
-                letter.appendChild(iDiv);
+                letter.appendChild(nameTag);
             }
         }
     }
