@@ -23,6 +23,10 @@
         .title {
             display: none;
         }
+
+        footer {
+            display: none;
+        }
     }
 
     html,
@@ -34,6 +38,10 @@
         padding: 0px;
         font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Serif SC', 'Noto Serif TC', sans-serif;
         background-color: rgb(236, 236, 236);
+    }
+
+    footer {
+        height: 20px;
     }
 
     .letter {
@@ -118,13 +126,16 @@
             <input type="file" class="input" accept=".xls,.xlsx" />
         </div>
         <div class="menu">
-            <button class="printButton" onclick="printPage()">Print</button>
+            <button class="printButton" onclick="print(document)">Print</button>
             <button class="makeAnotherButton" onclick="makeAnother()">Make another</button>
         </div>
     </div>
     <div class="page">
     </div>
 </body>
+<footer>
+
+</footer>
 <script>
     const input = document.querySelector('.input');
     const page = document.querySelector('.page');
@@ -138,22 +149,26 @@
         nameList = [];
         if (!input.files[0]) return;
         await readXlsxFile(input.files[0]).then((rows) => {
-            let fileName = input.files[0].name.split(/.\w+$/)[0];
-            document.title = fileName;
-            bigTitle.innerText = fileName;
             rows.map((data) => {
                 data[0] = data[0].replaceAll(/\s?[+,]\s?/g, ', ');
                 nameList.push(data[0].split(/[\s，、+]/));
             });
+            changeTitleAndLayout();
             addColum(nameList);
         }).catch(error => {
-            console.log(error)
+            alert(error.message);
         });
     })
 
-    function addColum(nameList) {
+    function changeTitleAndLayout() {
+        let fileName = input.files[0].name.split(/.\w+$/)[0];
+        document.title = fileName;
+        bigTitle.innerText = fileName;
         menu.style.display = 'block';
         welcome.style.display = 'none';
+    }
+
+    function addColum(nameList) {
         let listLength = nameList.length;
         if (!listLength) return;
         let tableNumber = Math.floor(listLength / 42) + 1;
@@ -201,10 +216,6 @@
                 letter.after(lineBreak);
             }
         }
-    }
-
-    function printPage() {
-        print(document);
     }
 
     function makeAnother() {
