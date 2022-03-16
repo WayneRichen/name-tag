@@ -19,7 +19,8 @@
             size: letter;
             margin: 0mm;
         }
-        #input {
+
+        .title {
             display: none;
         }
     }
@@ -32,22 +33,24 @@
         margin: 0px;
         padding: 0px;
         font-family: 'Noto Sans TC', 'Noto Sans SC', 'Noto Serif SC', 'Noto Serif TC', sans-serif;
+        background-color: rgb(236, 236, 236);
     }
 
     .letter {
+        background-color: white;
         width: max-content;
         margin: auto;
-        background-color: gainsboro;
         display: grid;
         grid-template-columns: max-content max-content max-content;
-        border-bottom: 1px dotted rgb(190, 190, 190);;
+        border-bottom: 1px dotted rgb(190, 190, 190);
         border-right: 1px dotted rgb(190, 190, 190);
+        page-break-after: always;
     }
+
     .name-tag {
         width: 2.35in;
-        height: 0.75in;
-        padding-left: 0.2in;
-        padding-right: 0.2in;
+        height: 0.65in;
+        padding: 0.05in 0.2in 0.05in 0.2in;
         border-top: 1px dotted rgb(190, 190, 190);
         border-left: 1px dotted rgb(190, 190, 190);
         text-align: center;
@@ -58,43 +61,111 @@
         justify-content: center;
     }
 
+    .title {
+        margin: auto auto 10px auto;
+        padding: 5px;
+        /* width: 400px; */
+        text-align: center;
+        color: rgb(14, 66, 69);
+        background-color: white;
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .printButton,
+    .input {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        cursor: pointer;
+    }
+
+    .printButton:hover {
+        background-color: rgb(0, 106, 213);
+    }
+
+    .makeAnotherButton {
+        color: #007bff;
+        background-color: transparent;
+        border-color: #007bff;
+        border: 1px solid;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        cursor: pointer;
+    }
+
+    .makeAnotherButton:hover {
+        color: white;
+        background-color: rgb(0, 127, 250);
+    }
 </style>
 
 <body>
-    <input type="file" class="input" accept=".xls,.xlsx" />
-    <div class="letter">
+    <div class="title">
+        <span class="bigTitle" style="font-size: 48px;">Name Tag Generator</span>
+        <div class="welcome">
+            <input type="file" class="input" accept=".xls,.xlsx" />
+        </div>
+        <div class="menu">
+            <button class="printButton" onclick="printPage()">Print</button>
+            <button class="makeAnotherButton" onclick="makeAnother()">Make another</button>
+        </div>
+    </div>
+    <div class="page">
     </div>
 </body>
 <script>
     const input = document.querySelector('.input');
-    const letter = document.querySelector('.letter');
+    const page = document.querySelector('.page');
+    const welcome = document.querySelector('.welcome');
+    const menu = document.querySelector('.menu');
+    const bigTitle = document.querySelector('.bigTitle');
     let nameList = [];
 
     input.addEventListener('change', async () => {
-        letter.innerHTML = "";
+        page.innerHTML = "";
         nameList = [];
         if (!input.files[0]) return;
         await readXlsxFile(input.files[0]).then((rows) => {
+            let fileName = input.files[0].name.split(/.\w+$/)[0];
+            document.title = fileName;
+            bigTitle.innerText = fileName;
             rows.map((data) => {
-                nameList.push(data[0].split(/[\s,，、+]/));
+                data[0] = data[0].replaceAll(/\s?[+,]\s?/g, ', ');
+                nameList.push(data[0].split(/[\s，、+]/));
             });
+            addColum(nameList);
         }).catch(error => {
             console.log(error)
         });
-        addColum(nameList);
     })
 
     function addColum(nameList) {
+        menu.style.display = 'block';
+        welcome.style.display = 'none';
         let listLength = nameList.length;
         if (!listLength) return;
         let tableNumber = Math.floor(listLength / 42) + 1;
         let listIndex = 0;
         for (let tableIndex = 0; tableIndex < tableNumber; tableIndex++) {
+            const letter = document.createElement('div');
+            letter.className = 'letter';
             for (let i = 0; i < 42; i++) {
-                let nameTag = document.createElement('div');
+                const nameTag = document.createElement('div');
                 nameTag.className = 'name-tag';
                 if (nameList[listIndex] !== undefined) {
-                    let nameSpan = document.createElement('span');
+                    const nameSpan = document.createElement('span');
                     nameSpan.className = 'name';
                     nameList[listIndex].forEach(element => {
                         nameSpan.innerText += element + ' ';
@@ -102,26 +173,47 @@
                     switch (true) {
                         case nameSpan.innerText.length < 20:
                             nameSpan.style.fontSize = '28px';
+                            nameSpan.style.lineHeight = 1.1;
                             break;
                         case nameSpan.innerText.length < 35:
-                            nameSpan.style.fontSize = '24px';
+                            nameSpan.style.fontSize = '23px';
+                            nameSpan.style.lineHeight = 1.25;
                             break;
                         case nameSpan.innerText.length < 55:
                             nameSpan.style.fontSize = '20px';
+                            nameSpan.style.lineHeight = 1;
                             break;
                         case nameSpan.innerText.length < 70:
-                            nameSpan.style.fontSize = '17px';
+                            nameSpan.style.fontSize = '15px';
+                            nameSpan.style.lineHeight = 1.25;
                             break;
                         default:
                             break;
                     }
-                    nameSpan.style.lineHeight = 1;
                     nameTag.append(nameSpan);
                 }
                 listIndex++;
                 letter.appendChild(nameTag);
             }
+            page.appendChild(letter);
+            if (tableIndex < tableNumber - 1) {
+                const lineBreak = document.createElement("br");
+                letter.after(lineBreak);
+            }
         }
+    }
+
+    function printPage() {
+        print(document);
+    }
+
+    function makeAnother() {
+        menu.style.display = 'none';
+        welcome.style.display = 'block';
+        page.innerHTML = '';
+        input.value = '';
+        document.title = 'Name Tag Generator';
+        bigTitle.innerText = 'Name Tag Generator';
     }
 
 </script>
