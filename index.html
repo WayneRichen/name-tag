@@ -155,9 +155,13 @@
         nameList = [];
         if (!input.files[0]) return;
         await readXlsxFile(input.files[0]).then((rows) => {
-            rows.map((data) => {
-                data[0] = data[0].replaceAll(/\s?[+,]\s?/g, ', ');
-                nameList.push(data[0].split(/[\s，、+]/));
+            rows.map((row) => {
+                row.map((data)=>{
+                    if (data) {
+                        data = String(data).replaceAll(/\s?[+,]\s?/g, ', ');
+                        nameList.push(data.split(/[\s，、+]/));
+                    }
+                })
             });
             changeTitleAndLayout();
             addColum(nameList);
