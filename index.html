@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload an Excel file to generate name tag.">
     <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
     <link rel="icon" href="favi.ico" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,7 +121,7 @@
     }
 
     .blank {
-        height: 140px;
+        height: 110px;
     }
 </style>
 
@@ -132,7 +133,7 @@
         </div>
         <div class="menu">
             <button class="printButton" onclick="print(document)">Print</button>
-            <button class="makeAnotherButton" onclick="makeAnother()">Make another</button>
+            <button class="makeAnotherButton" onclick="makeAnother()">Clear</button>
         </div>
     </div>
     <div class="blank"></div>
@@ -151,12 +152,12 @@
     let nameList = [];
 
     input.addEventListener('change', async () => {
-        page.innerHTML = "";
+        page.innerHTML = "<br>";
         nameList = [];
         if (!input.files[0]) return;
         await readXlsxFile(input.files[0]).then((rows) => {
             rows.map((row) => {
-                row.map((data)=>{
+                row.map((data) => {
                     if (data) {
                         data = String(data).replaceAll(/\s?[+,]\s?/g, ', ');
                         nameList.push(data.split(/[\s，、+]/));
