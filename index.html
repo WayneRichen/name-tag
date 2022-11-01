@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Upload an Excel file to generate name tag.">
     <script src="https://unpkg.com/read-excel-file@4.x/bundle/read-excel-file.min.js"></script>
+    <script src="jquery-2.6.1.js"></script>
     <link rel="icon" href="favi.ico" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -150,6 +151,7 @@
     const menu = document.querySelector('.menu');
     const bigTitle = document.querySelector('.bigTitle');
     let nameList = [];
+    let listIndex = 0;
 
     input.addEventListener('change', async () => {
         page.innerHTML = "<br>";
@@ -183,7 +185,7 @@
         let listLength = nameList.length;
         if (!listLength) return;
         let tableNumber = Math.floor(listLength / 42) + 1;
-        let listIndex = 0;
+        
         for (let tableIndex = 0; tableIndex < tableNumber; tableIndex++) {
             const letter = document.createElement('div');
             letter.className = 'letter';
@@ -192,29 +194,30 @@
                 nameTag.className = 'name-tag';
                 if (nameList[listIndex] !== undefined) {
                     const nameSpan = document.createElement('span');
+                    nameSpan.id = listIndex;
                     nameSpan.className = 'name';
                     nameList[listIndex].forEach(element => {
                         nameSpan.innerText += element + ' ';
                     });
+                    nameSpan.className += ' ' + nameSpan.innerText.length;
+                    nameSpan.style.overflowWrap = 'anywhere';
                     switch (true) {
                         case nameSpan.innerText.length < 20:
                             nameSpan.style.fontSize = '28px';
                             nameSpan.style.lineHeight = 1.1;
                             break;
-                        case nameSpan.innerText.length < 35:
+                        case nameSpan.innerText.length < 30:
                             nameSpan.style.fontSize = '23px';
-                            nameSpan.style.lineHeight = 1.25;
+                            nameSpan.style.lineHeight = 1;
                             break;
                         case nameSpan.innerText.length < 55:
                             nameSpan.style.fontSize = '20px';
                             nameSpan.style.lineHeight = 1;
                             break;
-                        case nameSpan.innerText.length < 70:
+                        default:
                             nameSpan.style.fontSize = '15px';
                             nameSpan.style.lineHeight = 1.25;
-                            break;
-                        default:
-                            break;
+                            break;   
                     }
                     nameTag.append(nameSpan);
                 }
@@ -227,6 +230,22 @@
                 letter.after(lineBreak);
             }
         }
+        prune();
+    }
+
+    function prune() {
+        for (let i = 0; i < 169; i++) {
+            if ($(`#${i}`).height() > 70) {
+                while (true) {
+                    let text = $(`#${i}`).text();
+                    text = text.slice(0,-1);
+                    $(`#${i}`).text(text);
+                    if ($(`#${i}`).height() <= 70 ) {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     function makeAnother() {
@@ -236,6 +255,7 @@
         input.value = '';
         document.title = 'Name Tag Generator';
         bigTitle.innerText = 'Name Tag Generator';
+        listIndex = 0;
     }
 
 </script>
