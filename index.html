@@ -212,10 +212,14 @@
                             nameSpan.style.fontSize = '20px';
                             nameSpan.style.lineHeight = 1;
                             break;
-                        default:
+                        case nameSpan.innerText.length < 70:
                             nameSpan.style.fontSize = '15px';
                             nameSpan.style.lineHeight = 1.25;
-                            break;   
+                            break;
+                        default:
+                            nameSpan.style.fontSize = '15px';
+                            nameSpan.style.lineHeight = 1;
+                            break;
                     }
                     nameTag.append(nameSpan);
                 }
